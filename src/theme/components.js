@@ -50,142 +50,117 @@ function renderCSS(props, currentBreakpoint) {
     .join("")
 }
 
-export function Box({
-  as,
-  styleSheet: { focus, hover, srOnly, ...styleSheet },
-  ...props
-}) {
-  const Tag = as || "div"
+export const Box = React.forwardRef(
+  (
+    { as, styleSheet: { focus, hover, srOnly, ...styleSheet }, ...props },
+    ref
+  ) => {
+    const Tag = as || "div"
 
-  return (
-    <React.Fragment>
-      <Tag
-        {...props}
-        className={`${props.className ? props.className : ""} ${
-          srOnly ? "sr-only" : ""
-        }`}
-      />
-      <style jsx>{`
-        ${Tag} {
-          ${renderCSS(styleSheet, "xs")};
-        }
-        ${Tag}:hover {
-          ${renderCSS(hover, "xs")};
-        }
-        ${Tag}:focus {
-          ${renderCSS(focus, "xs")};
-        }
-        @media screen and (min-width: ${theme.breakpoints[
-            "Breakpoints.sm"
-          ]}px) {
+    return (
+      <React.Fragment>
+        <Tag
+          ref={ref}
+          {...props}
+          className={`${props.className ? props.className : ""} ${
+            srOnly ? "sr-only" : ""
+          }`}
+        />
+        <style jsx>{`
           ${Tag} {
-            ${renderCSS(styleSheet, "sm")};
+            ${renderCSS(styleSheet, "xs")};
           }
           ${Tag}:hover {
-            ${renderCSS(hover, "sm")};
+            ${renderCSS(hover, "xs")};
           }
           ${Tag}:focus {
-            ${renderCSS(focus, "sm")};
+            ${renderCSS(focus, "xs")};
           }
-        }
-        @media screen and (min-width: ${theme.breakpoints[
-            "Breakpoints.md"
-          ]}px) {
-          ${Tag} {
-            ${renderCSS(styleSheet, "md")};
+          @media screen and (min-width: ${theme.breakpoints[
+              "Breakpoints.sm"
+            ]}px) {
+            ${Tag} {
+              ${renderCSS(styleSheet, "sm")};
+            }
+            ${Tag}:hover {
+              ${renderCSS(hover, "sm")};
+            }
+            ${Tag}:focus {
+              ${renderCSS(focus, "sm")};
+            }
           }
-          ${Tag}:hover {
-            ${renderCSS(hover, "md")};
+          @media screen and (min-width: ${theme.breakpoints[
+              "Breakpoints.md"
+            ]}px) {
+            ${Tag} {
+              ${renderCSS(styleSheet, "md")};
+            }
+            ${Tag}:hover {
+              ${renderCSS(hover, "md")};
+            }
+            ${Tag}:focus {
+              ${renderCSS(focus, "md")};
+            }
           }
-          ${Tag}:focus {
-            ${renderCSS(focus, "md")};
+          @media screen and (min-width: ${theme.breakpoints[
+              "Breakpoints.lg"
+            ]}px) {
+            ${Tag} {
+              ${renderCSS(styleSheet, "lg")};
+            }
+            ${Tag}:hover {
+              ${renderCSS(hover, "lg")};
+            }
+            ${Tag}:focus {
+              ${renderCSS(focus, "lg")};
+            }
           }
-        }
-        @media screen and (min-width: ${theme.breakpoints[
-            "Breakpoints.lg"
-          ]}px) {
-          ${Tag} {
-            ${renderCSS(styleSheet, "lg")};
+          @media screen and (min-width: ${theme.breakpoints[
+              "Breakpoints.xl"
+            ]}px) {
+            ${Tag} {
+              ${renderCSS(styleSheet, "xl")};
+            }
+            ${Tag}:hover {
+              ${renderCSS(hover, "xl")};
+            }
+            ${Tag}:focus {
+              ${renderCSS(focus, "xl")};
+            }
           }
-          ${Tag}:hover {
-            ${renderCSS(hover, "lg")};
-          }
-          ${Tag}:focus {
-            ${renderCSS(focus, "lg")};
-          }
-        }
-        @media screen and (min-width: ${theme.breakpoints[
-            "Breakpoints.xl"
-          ]}px) {
-          ${Tag} {
-            ${renderCSS(styleSheet, "xl")};
-          }
-          ${Tag}:hover {
-            ${renderCSS(hover, "xl")};
-          }
-          ${Tag}:focus {
-            ${renderCSS(focus, "xl")};
-          }
-        }
-      `}</style>
-    </React.Fragment>
-  )
-}
-
-/* @media screen and (min-width: ${theme.breakpoints['Breakpoints.md']}px) {
-          ${renderCSS(styleSheet, 'md')};
-          :hover {
-            ${renderCSS(hover, 'md')};
-          }
-          :focus {
-            ${renderCSS(focus, 'md')};
-          }
-        }
-        @media screen and (min-width: ${theme.breakpoints['Breakpoints.lg']}px) {
-          ${renderCSS(styleSheet, 'lg')};
-          :hover {
-            ${renderCSS(hover, 'lg')};
-          }
-          :focus {
-            ${renderCSS(focus, 'lg')};
-          }
-        }
-        @media screen and (min-width: ${theme.breakpoints['Breakpoints.xl']}px) {
-          ${renderCSS(styleSheet, 'xl')};
-          :hover {
-            ${renderCSS(hover, 'xl')};
-          }
-          :focus {
-            ${renderCSS(focus, 'xl')};
-          }
-        } */
+        `}</style>
+      </React.Fragment>
+    )
+  }
+)
 
 Box.defaultProps = {
   styleSheet: {},
 }
 
-export function Icon({ as, styleSheet, ...props }) {
-  const { iconVariant, ...restStyleSheet } = styleSheet
-  const styleSheetUpdated = restStyleSheet
-
-  console.log("iconVariant", iconVariant)
+export function Icon({ as, styleSheet: initialStyleSheet, ...props }) {
+  const Tag = "svg"
+  const { iconVariant, hover, focus, ...restStyleSheet } = initialStyleSheet
+  const styleSheet = {
+    width: "1.5ch",
+    height: "1.5ch",
+    ...restStyleSheet,
+  }
 
   return (
-    <Box
-      as={FontAwesomeIcon}
-      icon={iconSet[`fa${capitalize(iconVariant)}`]}
-      crossOrigin="anonymous"
-      styleSheet={{
-        width: "1.5ch",
-        height: "1.5ch",
-        ...styleSheetUpdated,
-      }}
-      {...props}
-    />
+    <React.Fragment>
+      <Box styleSheet={styleSheet}>
+        <FontAwesomeIcon
+          icon={iconSet[`fa${capitalize(iconVariant)}`]}
+          crossOrigin="anonymous"
+          {...props}
+        />
+      </Box>
+    </React.Fragment>
   )
 }
 
-export function Text({ as, styleSheet, ...props }) {
+export const Text = React.forwardRef(({ as, styleSheet, ...props }, ref) => {
   const {
     textVariant = {
       fontSize: "inherit",
@@ -194,14 +169,14 @@ export function Text({ as, styleSheet, ...props }) {
   } = styleSheet
   const styleSheetUpdated = { ...textVariant, ...restStyleSheet }
   const tag = as || "span"
-  return <Box as={tag} styleSheet={styleSheetUpdated} {...props} />
-}
+  return <Box ref={ref} as={tag} styleSheet={styleSheetUpdated} {...props} />
+})
 Text.defaultProps = {
   styleSheet: {},
 }
 
 export function Image({ as, ...props }) {
-  const tag = as || "img"
+  const tag = "img"
   const { children, dangerouslySetInnerHTML, ...imageProps } = props
 
   return <Box as={tag} {...imageProps} />
