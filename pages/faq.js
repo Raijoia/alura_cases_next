@@ -1,6 +1,11 @@
-import { useEffect, useState } from "react"
 import Link from "../src/components/Link"
 
+// SSG => Static Site Generation
+// SSR => Server Side Rendering
+// ISR => Incremental Static Regeneration(A mistura do SSG e SSR)
+
+// getStaticProps => roda de forma estática, durante a build, não mudando o conteudo da api caso for mudada 
+// getServerSideProps => roda toda vez que a página é carregada, ou seja, toda vez que o usuário acessar a página, ele vai fazer uma requisição para a api
 export async function getStaticProps() {
   // link api
   const FAQ_API_URL =
